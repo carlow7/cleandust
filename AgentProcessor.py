@@ -59,3 +59,55 @@ class VacuumAgent:
         else:
             self.return_home()
 
+def execute_action(self, action):
+        if self.status == "off":
+            return
+
+        if action == 'move_north':
+            if self.location[0] > 0:
+                self.location[0] -= 1
+        elif action == 'move_south':
+            if self.location[0] < 3:
+                self.location[0] += 1
+        elif action == 'move_east':
+            if self.location[1] < 3:
+                self.location[1] += 1
+        elif action == 'move_west':
+            if self.location[1] > 0:
+                self.location[1] -= 1
+        elif action == 'clean':
+            self.clean_dirt()
+        elif action == 'return_home':
+            self.return_home()
+
+        if action is not None:
+            self.energy -= 1
+
+def return_home(self):
+    while self.location != [0, 0] and self.energy > 0:
+        if self.location[0] > 0:
+            self.location[0] -= 1
+        else:
+            self.location[1] -= 1
+        self.energy -= 1
+        #atualiza interface
+        time.sleep(1)
+
+def iterate():
+    if agent.energy > 0:
+        #atualiza interface
+        if agent.bag <= 10:
+            action = agent.determine_action()
+            agent.execute_action(action)
+            #atualiza interface
+            root.after(1000, iterate)
+        else:
+            agent.return_home()
+            agent.empty_bag()
+            action = agent.determine_action()
+            agent.execute_action(action)
+            #atualiza interface
+            root.after(1000, iterate)
+
+
+iterate()
