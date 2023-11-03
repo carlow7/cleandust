@@ -111,3 +111,38 @@ def iterate():
 
 
 iterate()
+
+agent = VacuumAgent()
+
+class GUIInterface:
+    def __init__(self, root, agent):
+        self.root = root
+        self.agent = agent
+
+        self.status_label = tk.Label(root, text=f"Status:{self.agent.status}")
+        self.status_label.pack()
+
+        self.toggle_button = tk.Button(root, text="Turn On/Off", command=self.toggle_status)
+        self.toggle_button.pack()
+
+        self.canvas = tk.Canvas(root, width=400, height=400)
+        self.canvas.pack()
+
+        self.info_label = tk.Label(root, text="")
+        self.info_label.pack()
+
+
+    def toggle_status(self):
+        if self.agent.status == "on":
+            self.agent.status = "off"
+            self.status_label.config(text="Status: Off")
+        else:
+            self.agent.status = "on"
+            self.status_label.config(text="Status: On")
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    agent = VacuumAgent()
+    GUIInterface(root, agent)
+    root.mainloop()
