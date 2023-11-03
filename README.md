@@ -1,6 +1,13 @@
 # cleandust
 
 
+Turma: SIS201N01
+Participantes:
+Carleson Kalebe da Silva Saquiray
+João Gabriel Ferreira Aguiar
+Carlos Eduardo dos Santos Cavalcante
+Vinicius Gabriel Oliveira Pontes
+
 
 *PEAS para o Sistema do Agente Aspirador com Interface Gráfica:*
 
