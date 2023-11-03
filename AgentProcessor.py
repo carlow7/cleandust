@@ -139,6 +139,24 @@ class GUIInterface:
         else:
             self.agent.status = "on"
             self.status_label.config(text="Status: On")
+            
+            
+            
+            
+    def update_interface(self):
+        self.canvas.delete("all")
+        for i in range(4):
+            for j in range(4):
+                color = "white" if environment[i, j] == 0 else "black"
+                self.canvas.create_rectangle(j * 100, i * 100, (j + 1) * 100, (i + 1) * 100, fill=color)
+        agent_color = "red" if environment[self.agent.location[0], self.agent.location[1]] == 1 else "orange"
+        self.canvas.create_rectangle(self.agent.location[1] * 100, self.agent.location[0] * 100,
+                                     (self.agent.location[1] + 1) * 100, (self.agent.location[0] + 1) * 100,
+                                     fill=agent_color)
+
+        self.info_label.config(
+            text=f"Energia: {self.agent.energy}, Bag: {self.agent.bag}, Full: {'Yes' if self.agent.bag == 10 else 'No'}")
+        self.root.update_idletasks()        
 
 
 if __name__ == "__main__":
