@@ -59,7 +59,7 @@ class VacuumAgent:
         else:
             self.return_home()
 
-def execute_action(self, action):
+    def execute_action(self, action):
         if self.status == "off":
             return
 
@@ -83,36 +83,16 @@ def execute_action(self, action):
         if action is not None:
             self.energy -= 1
 
-def return_home(self):
-    while self.location != [0, 0] and self.energy > 0:
-        if self.location[0] > 0:
-            self.location[0] -= 1
-        else:
-            self.location[1] -= 1
-        self.energy -= 1
-        #atualiza interface
-        time.sleep(1)
+    def return_home(self):
+        while self.location != [0, 0] and self.energy > 0:
+            if self.location[0] > 0:
+                self.location[0] -= 1
+            else:
+                self.location[1] -= 1
+            self.energy -= 1
+            interface.update_interface()
+            time.sleep(1)
 
-def iterate():
-    if agent.energy > 0:
-        #atualiza interface
-        if agent.bag <= 10:
-            action = agent.determine_action()
-            agent.execute_action(action)
-            #atualiza interface
-            root.after(1000, iterate)
-        else:
-            agent.return_home()
-            agent.empty_bag()
-            action = agent.determine_action()
-            agent.execute_action(action)
-            #atualiza interface
-            root.after(1000, iterate)
-
-
-iterate()
-
-agent = VacuumAgent()
 
 class GUIInterface:
     def __init__(self, root, agent):
@@ -131,7 +111,6 @@ class GUIInterface:
         self.info_label = tk.Label(root, text="")
         self.info_label.pack()
 
-
     def toggle_status(self):
         if self.agent.status == "on":
             self.agent.status = "off"
@@ -139,10 +118,7 @@ class GUIInterface:
         else:
             self.agent.status = "on"
             self.status_label.config(text="Status: On")
-            
-            
-            
-            
+
     def update_interface(self):
         self.canvas.delete("all")
         for i in range(4):
@@ -155,12 +131,39 @@ class GUIInterface:
                                      fill=agent_color)
 
         self.info_label.config(
-            text=f"Energia: {self.agent.energy}, Bag: {self.agent.bag}, Full: {'Yes' if self.agent.bag == 10 else 'No'}")
-        self.root.update_idletasks()        
+            text=f"Energia: {self.agent.energy}, Armazenamento: {self.agent.bag}, "
+                 f"Cheio: {'Sim' if self.agent.bag == 10 else 'Não'}")
+        self.root.update_idletasks()
 
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    agent = VacuumAgent()
-    GUIInterface(root, agent)
-    root.mainloop()
+agent = VacuumAgent()
+
+root = tk.Tk()
+root.title("Vacuum Agent")
+root.geometry("450x500")
+
+interface = GUIInterface(root, agent)
+
+
+def iterate():
+    if agent.energy > 0:
+        interface.update_interface()
+        if agent.bag <= 10:
+            action = agent.determine_action()
+            agent.execute_action(action)
+            interface.update_interface()
+            root.after(2000, iterate)
+        else:
+            agent.return_home()
+            agent.empty_bag()
+            action = agent.determine_action()
+            agent.execute_action(action)
+            interface.update_interface()
+            root.after(1000, iterate)
+    else:
+        interface.status_label.config(text="Status: Off")
+        interface.toggle_button.config(state=tk.DISABLED)
+
+
+iterate()
+root.mainloop()
